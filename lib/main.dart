@@ -4,5 +4,5 @@ import 'provider_setup.dart';
 
 void main() {
   setupProviders();
-  runApp(MyApp());
+  runApp(const MyApp());
 }
