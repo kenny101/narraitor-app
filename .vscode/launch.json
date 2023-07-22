@@ -1,0 +1,50 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "naraitor",
+        "request": "launch",
+        "type": "dart"
+      },
+      {
+        "name": "Pixel 6a",
+        "request": "launch",
+        "type": "dart",
+        "deviceId": "28021JEGR07459"
+      },
+      {
+        "name": "IPhone 14 Pro Max",
+        "request": "launch",
+        "type": "dart",
+        "deviceId": "1A73565C-0D15-471A-B75E-70F58E6E1989"
+      },
+      {
+          "name": "Web",
+          "request": "launch",
+          "type": "dart",
+          "deviceId": "chrome"
+        }
+      // {
+      //     "name": "naraitor (profile mode)",
+      //     "request": "launch",
+      //     "type": "dart",
+      //     "flutterMode": "profile"
+      // },
+      // {
+      //     "name": "naraitor (release mode)",
+      //     "request": "launch",
+      //     "type": "dart",
+      //     "flutterMode": "release"
+      // }
+    ],
+    "compounds": [
+      {
+        "name": "All Devices",
+        "configurations": ["Pixel 6a", "IPhone 14 Pro Max", "Web"]
+      }
+    ]
+  }
+  
