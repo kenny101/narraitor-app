@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'auth_button.dart';
 
 class WelcomeView extends StatelessWidget {
   const WelcomeView({Key? key}) : super(key: key);
@@ -48,112 +49,27 @@ class WelcomeView extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      ElevatedButton(
+                      AuthButton(
+                        text: 'Sign In',
+                        onPressed: () {
+                          // Add your sign-in logic here
+                        },
+                      ),
+                      const SizedBox(height: 5),
+                      AuthButton(
+                        imageAssetPath: 'assets/logos/google.png',
+                        text: 'Continue with Google',
                         onPressed: () {
                           // Add your sign-up with Google logic here
                         },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white.withOpacity(
-                              0.1), // Adjust the opacity value (0.0 to
-                          elevation: 0,
-                          side:
-                              const BorderSide(width: 2, color: Colors.white60),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30.0),
-                          ),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const SizedBox(width: 10),
-                              Text(
-                                'Sign up free',
-                                style: GoogleFonts.nunito(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
                       ),
                       const SizedBox(height: 5),
-                      // Button with Google logo
-                      ElevatedButton(
-                        onPressed: () {
-                          // Add your sign-up with Google logic here
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white.withOpacity(
-                              0.1), // Adjust the opacity value (0.0 to
-                          elevation: 0,
-                          side:
-                              const BorderSide(width: 2, color: Colors.white60),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30.0),
-                          ),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.asset(
-                                'assets/logos/google.png',
-                                width: 24,
-                                height: 24,
-                              ),
-                              const SizedBox(width: 10),
-                              Text(
-                                'Continue with Google',
-                                style: GoogleFonts.nunito(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 5),
-                      // Button with Apple logo
-                      ElevatedButton(
+                      AuthButton(
+                        imageAssetPath: 'assets/logos/appleDark.png',
+                        text: 'Continue with Apple',
                         onPressed: () {
                           // Add your sign-up with Apple logic here
                         },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white.withOpacity(
-                              0.1), // Adjust the opacity value (0.0 to 1.0)
-                          elevation: 0,
-                          side:
-                              const BorderSide(width: 2, color: Colors.white60),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30.0),
-                          ),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.asset(
-                                'assets/logos/appleDark.png',
-                                width: 24,
-                                height: 24,
-                              ),
-                              const SizedBox(width: 10),
-                              Text(
-                                'Continue with Apple',
-                                style: GoogleFonts.nunito(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
                       ),
                       const SizedBox(height: 5),
                       Center(
