@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'auth_button.dart';
+import 'package:go_router/go_router.dart';
 
 class WelcomeView extends StatelessWidget {
   const WelcomeView({Key? key}) : super(key: key);
@@ -50,9 +51,9 @@ class WelcomeView extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       AuthButton(
-                        text: 'Sign In',
+                        text: 'Sign up free',
                         onPressed: () {
-                          // Add your sign-in logic here
+                          context.pushNamed('signup');
                         },
                       ),
                       const SizedBox(height: 5),
@@ -75,7 +76,7 @@ class WelcomeView extends StatelessWidget {
                       Center(
                         child: InkWell(
                           onTap: () {
-                            // Add your login logic here
+                            context.pushNamed('login');
                           },
                           borderRadius: BorderRadius.circular(30.0),
                           child: Container(

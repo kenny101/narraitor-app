@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'auth_feature/welcome_view.dart';
+import 'auth_feature/login_view.dart';
+import 'auth_feature/signup_view.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -21,8 +23,28 @@ class MyApp extends StatelessWidget {
           path: '/',
           builder: (context, state) => const WelcomeView(),
         ),
-       
+        GoRoute(
+          name: 'signup',
+          path: '/signup',
+          builder: (context, state) => const SignupView(),
+        ),
+        GoRoute(
+          name: 'login',
+          path: '/login',
+          builder: (context, state) => const LoginView(),
+        ),
       ],
+      redirect: (context, state) {
+        const isAuthenticated =
+            true; // Add your logic to check whether a user is authenticated or not
+        if (!isAuthenticated) {
+          print("not auth");
+          return '/auth';
+        } else {
+          print("auth");
+          return null;
+        }
+      },
     );
     return MaterialApp.router(
       routerConfig: router,
