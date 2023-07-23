@@ -51,3 +51,5 @@ flutter:
     - assets/images/
     - assets/welcome-background.png
     - assets/logos/text-logo.png
+    - assets/logos/appleDark.png
+    - assets/logos/google.png
