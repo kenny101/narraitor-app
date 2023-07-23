@@ -56,7 +56,7 @@ class WelcomeView extends StatelessWidget {
                           context.pushNamed('signup');
                         },
                       ),
-                      const SizedBox(height: 5),
+                      const SizedBox(height: 10),
                       AuthButton(
                         imageAssetPath: 'assets/logos/google.png',
                         text: 'Continue with Google',
@@ -64,7 +64,7 @@ class WelcomeView extends StatelessWidget {
                           // Add your sign-up with Google logic here
                         },
                       ),
-                      const SizedBox(height: 5),
+                      const SizedBox(height: 10),
                       AuthButton(
                         imageAssetPath: 'assets/logos/appleDark.png',
                         text: 'Continue with Apple',
@@ -72,7 +72,7 @@ class WelcomeView extends StatelessWidget {
                           // Add your sign-up with Apple logic here
                         },
                       ),
-                      const SizedBox(height: 5),
+                      const SizedBox(height: 10),
                       Center(
                         child: InkWell(
                           onTap: () {
