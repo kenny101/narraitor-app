@@ -66,11 +66,11 @@ class WelcomeView extends StatelessWidget {
                             imageAssetPath: 'assets/logos/google.png',
                             text: 'Continue with Google',
                             onPressed: () async {
-                              await authProviderModel
+                              bool loginValid = await authProviderModel
                                   .loginWithProvider("google");
-                              await authProviderModel
-                                  .printSharedPreferencesData();
-                              goRouter.goNamed('home');
+                              if (loginValid) {
+                                goRouter.goNamed('navbar');
+                              }
                             },
                           ),
                           const SizedBox(height: 10),

@@ -13,8 +13,8 @@ class AuthProvider extends ChangeNotifier {
     pb.authStore.clear();
     prefs.remove("pb_auth");
   }
-  
-  Future<void> loginWithProvider(String provider) async {
+
+  Future<bool> loginWithProvider(String provider) async {
     if (provider != 'apple' && provider != 'google') {
       throw ArgumentError(
           "Invalid provider. Allowed providers are 'apple' or 'google'.");
@@ -34,7 +34,11 @@ class AuthProvider extends ChangeNotifier {
       prefs.setString("pb_auth", encoded);
       print("called saved ${pb.authStore.token} ${pb.authStore.model.id}");
       pb.authStore.save(pb.authStore.token, pb.authStore.model.id);
+      if (pb.authStore.isValid) {
+        return true;
+      }
     }
+    return false;
   }
 
   Future<bool> isLoggedIn() async {
