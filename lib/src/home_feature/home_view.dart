@@ -1,26 +1,24 @@
 import 'package:flutter/material.dart';
 import '../providers/auth_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:go_router/go_router.dart'; // Import GoRouter
+import 'package:go_router/go_router.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final goRouter = GoRouter.of(context); // Store GoRouter instance
+    final goRouter = GoRouter.of(context);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Home'),
+        title: const Text('Home'),
         actions: [
           IconButton(
-            icon: Icon(Icons.logout),
+            icon: const Icon(Icons.logout),
             onPressed: () async {
               final authProvider = Provider.of<AuthProvider>(context, listen: false);
               await authProvider.logout();
-              
-              // Use the stored GoRouter instance to navigate to the 'welcome' route
               goRouter.goNamed('welcome');
             },
           ),

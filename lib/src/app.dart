@@ -6,6 +6,7 @@ import 'auth_feature/login_view.dart';
 import 'auth_feature/signup_view.dart';
 import 'providers/auth_provider.dart';
 import 'home_feature/home_view.dart';
+import 'nav_feature/navbar_view.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -40,9 +41,9 @@ class MyApp extends StatelessWidget {
           builder: (context, state) => const LoginView(),
         ),
         GoRoute(
-          name: 'home',
-          path: '/home',
-          builder: (context, state) => const HomeView(),
+          name: 'navbar',
+          path: '/navbar',
+          builder: (context, state) => const Navbar(),
         ),
       ],
       redirect: (context, state) => _redirectToCorrectView(context),
@@ -52,7 +53,7 @@ class MyApp extends StatelessWidget {
   Future<String?> _redirectToCorrectView(BuildContext context) async {
     final isLoggedIn = await AuthProvider().isLoggedIn();
     if (isLoggedIn) {
-      return '/home'; // Redirect to the home view if the user is logged in
+      return '/navbar'; // Redirect to the home view if the user is logged in
     } else {
       return null; // Otherwise, allow the original navigation to proceed
     }

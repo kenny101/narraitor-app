@@ -10,7 +10,7 @@ class WelcomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final goRouter = GoRouter.of(context); // Store GoRouter instance
+    final goRouter = GoRouter.of(context);
 
     return Scaffold(
       body: Consumer<AuthProvider>(
@@ -18,7 +18,6 @@ class WelcomeView extends StatelessWidget {
           return Stack(
             fit: StackFit.expand,
             children: [
-              // Set the background image using a Container with a DecorationImage
               Container(
                 decoration: const BoxDecoration(
                   image: DecorationImage(
