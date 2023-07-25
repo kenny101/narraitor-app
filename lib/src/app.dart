@@ -1,25 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'auth_feature/welcome_view.dart';
 import 'auth_feature/login_view.dart';
 import 'auth_feature/signup_view.dart';
+import 'providers/auth_provider.dart';
+import 'home_feature/home_view.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Use providers in widgets here if needed
-    // Example:
-    // var myProvider = Provider.of<MyProvider>(context);
+    return MultiProvider(
+      providers: [ChangeNotifierProvider(create: (context) => AuthProvider())],
+      child: MaterialApp.router(
+        routerConfig: _configureRouter(context),
+      ),
+    );
+  }
 
-    // GoRouter configuration
-    final router = GoRouter(
+  GoRouter _configureRouter(BuildContext context) {
+    return GoRouter(
       initialLocation: '/',
       routes: [
         GoRoute(
-          name:
-              'welcome', // Optional, add name to your routes. Allows you navigate by name instead of path
+          name: 'welcome',
           path: '/',
           builder: (context, state) => const WelcomeView(),
         ),
@@ -33,21 +39,22 @@ class MyApp extends StatelessWidget {
           path: '/login',
           builder: (context, state) => const LoginView(),
         ),
+        GoRoute(
+          name: 'home',
+          path: '/home',
+          builder: (context, state) => const HomeView(),
+        ),
       ],
-      redirect: (context, state) {
-        const isAuthenticated =
-            true; // Add your logic to check whether a user is authenticated or not
-        if (!isAuthenticated) {
-          print("not auth");
-          return '/auth';
-        } else {
-          print("auth");
-          return null;
-        }
-      },
+      redirect: (context, state) => _redirectToCorrectView(context),
     );
-    return MaterialApp.router(
-      routerConfig: router,
-    );
+  }
+
+  Future<String?> _redirectToCorrectView(BuildContext context) async {
+    final isLoggedIn = await AuthProvider().isLoggedIn();
+    if (isLoggedIn) {
+      return '/home'; // Redirect to the home view if the user is logged in
+    } else {
+      return null; // Otherwise, allow the original navigation to proceed
+    }
   }
 }
