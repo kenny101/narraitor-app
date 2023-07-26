@@ -7,7 +7,6 @@ import 'package:narraitor/src/profile_feature/profile_view.dart';
 import 'package:narraitor/src/play_feature/play_view.dart';
 
 class Navbar extends StatefulWidget {
-  // Named 'key' parameter for the constructor
   const Navbar({Key? key}) : super(key: key);
 
   @override
@@ -47,7 +46,7 @@ class NavbarState extends State<Navbar> {
               iconSize: 24,
               padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
               duration: const Duration(milliseconds: 400),
-              tabBackgroundColor: Color.fromARGB(40, 245, 245, 245)!,
+              tabBackgroundColor: const Color.fromARGB(40, 245, 245, 245)!,
               color: Colors.white, // Set the inactive tabs' color to white.
               tabs: const [
                 GButton(
