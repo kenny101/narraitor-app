@@ -1,31 +1,61 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'auth_feature/welcome_view.dart';
+import 'auth_feature/login_view.dart';
+import 'auth_feature/signup_view.dart';
+import 'providers/auth_provider.dart';
+import 'home_feature/home_view.dart';
+import 'nav_feature/navbar_view.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Use providers in widgets here if needed
-    // Example:
-    // var myProvider = Provider.of<MyProvider>(context);
+    return MultiProvider(
+      providers: [ChangeNotifierProvider(create: (context) => AuthProvider())],
+      child: MaterialApp.router(
+        routerConfig: _configureRouter(context),
+      ),
+    );
+  }
 
-    // GoRouter configuration
-    final router = GoRouter(
+  GoRouter _configureRouter(BuildContext context) {
+    return GoRouter(
       initialLocation: '/',
       routes: [
         GoRoute(
-          name:
-              'welcome', // Optional, add name to your routes. Allows you navigate by name instead of path
+          name: 'welcome',
           path: '/',
           builder: (context, state) => const WelcomeView(),
         ),
-       
+        GoRoute(
+          name: 'signup',
+          path: '/signup',
+          builder: (context, state) => const SignupView(),
+        ),
+        GoRoute(
+          name: 'login',
+          path: '/login',
+          builder: (context, state) => const LoginView(),
+        ),
+        GoRoute(
+          name: 'navbar',
+          path: '/navbar',
+          builder: (context, state) => const Navbar(),
+        ),
       ],
+      redirect: (context, state) => _redirectToCorrectView(context),
     );
-    return MaterialApp.router(
-      routerConfig: router,
-    );
+  }
+
+  Future<String?> _redirectToCorrectView(BuildContext context) async {
+    final isLoggedIn = await AuthProvider().isLoggedIn();
+    if (isLoggedIn) {
+      return '/navbar'; // Redirect to the home view if the user is logged in
+    } else {
+      return null; // Otherwise, allow the original navigation to proceed
+    }
   }
 }
