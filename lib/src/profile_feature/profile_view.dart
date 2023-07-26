@@ -16,7 +16,7 @@ class ProfileView extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         centerTitle: false, // Left-align the title.
-        title: Text(
+        title: const Text(
           'Profile',
           style: TextStyle(color: Colors.white, fontSize: 34), // Set the text color to white and increase the font size.
         ),
