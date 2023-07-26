@@ -1,4 +1,3 @@
-import 'package:go_router/go_router.dart';
 import 'package:pocketbase/pocketbase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
@@ -64,24 +63,5 @@ class AuthProvider extends ChangeNotifier {
     print("user is not logged in");
     // If any condition fails, the user is considered not logged in
     return false;
-  }
-
-  Future<void> printSharedPreferencesData() async {
-    final prefs = await SharedPreferences.getInstance();
-    final String? raw = prefs.getString("pb_auth");
-
-    if (raw != null && raw.isNotEmpty) {
-      final decoded = jsonDecode(raw);
-      final token = (decoded as Map<String, dynamic>)["token"] as String?;
-      final model =
-          RecordModel.fromJson(decoded["model"] as Map<String, dynamic>? ?? {});
-
-      if (token != null) {
-        print("Token: $token");
-        print("Model: $model");
-      }
-    } else {
-      print("SharedPreferences data not found or is empty.");
-    }
   }
 }

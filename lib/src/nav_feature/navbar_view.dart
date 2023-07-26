@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:narraitor/src/home_feature/home_view.dart';
+import 'package:narraitor/src/library_feature/library_view.dart';
+import 'package:narraitor/src/profile_feature/profile_view.dart';
+import 'package:narraitor/src/play_feature/play_view.dart';
 
 class Navbar extends StatefulWidget {
   // Named 'key' parameter for the constructor
@@ -17,66 +20,51 @@ class NavbarState extends State<Navbar> {
       TextStyle(fontSize: 30, fontWeight: FontWeight.w600);
   static const List<Widget> _widgetOptions = <Widget>[
     HomeView(),
-    Text(
-      'Likes',
-      style: optionStyle,
-    ),
-    Text(
-      'Search',
-      style: optionStyle,
-    ),
-    Text(
-      'Profile',
-      style: optionStyle,
-    ),
+    PlayView(),
+    LibraryView(),
+    ProfileView(),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      // Set the background color of the screen to black.
+      backgroundColor: Colors.black,
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              blurRadius: 20,
-              color: Colors.black.withOpacity(.1),
-            )
-          ],
-        ),
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
-            child: GNav(
-              rippleColor: Colors.grey[300]!,
+      bottomNavigationBar: SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            GNav(
+              rippleColor: Colors.grey[100]!,
               hoverColor: Colors.grey[100]!,
               gap: 8,
-              activeColor: Colors.black,
+              tabBorder:
+                  Border.all(color: Colors.grey, width: 2), // tab button border
+              activeColor: Colors.white, // Set the active tab's color to white.
               iconSize: 24,
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-              duration: Duration(milliseconds: 400),
-              tabBackgroundColor: Colors.grey[100]!,
-              color: Colors.black,
-              tabs: [
+              padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+              duration: const Duration(milliseconds: 400),
+              tabBackgroundColor: Color.fromARGB(40, 245, 245, 245)!,
+              color: Colors.white, // Set the inactive tabs' color to white.
+              tabs: const [
                 GButton(
                   icon: LineIcons.home,
                   text: 'Home',
                 ),
                 GButton(
-                  icon: LineIcons.heart,
-                  text: 'Likes',
+                  icon: LineIcons.playCircle,
+                  text: 'Playing', // Set horizontal margin to zero.
                 ),
                 GButton(
-                  icon: LineIcons.search,
-                  text: 'Search',
+                  icon: LineIcons.bookReader,
+                  text: 'Library',
                 ),
                 GButton(
                   icon: LineIcons.user,
-                  text: 'Profile',
+                  text: 'Profile', // Set horizontal margin to zero.
                 ),
               ],
               selectedIndex: _selectedIndex,
@@ -86,7 +74,7 @@ class NavbarState extends State<Navbar> {
                 });
               },
             ),
-          ),
+          ],
         ),
       ),
     );
