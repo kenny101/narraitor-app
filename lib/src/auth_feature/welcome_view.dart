@@ -13,6 +13,7 @@ class WelcomeView extends StatelessWidget {
     final goRouter = GoRouter.of(context);
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Consumer<AuthProvider>(
         builder: (context, authProviderModel, _) {
           return Stack(
@@ -27,7 +28,7 @@ class WelcomeView extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 250.0),
+                padding: const EdgeInsets.only(top: 150.0),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 35.0),
                   child: Column(
