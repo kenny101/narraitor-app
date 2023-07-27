@@ -28,7 +28,7 @@ class WelcomeView extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 150.0),
+                padding: const EdgeInsets.only(top: 225.0),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 35.0),
                   child: Column(
