@@ -3,9 +3,14 @@ import 'package:line_icons/line_icons.dart';
 import './horizontal_chips.dart'; // Import the new widget
 
 class SearchView extends StatefulWidget {
-  final bool showSearchBar; // Add the boolean parameter to the constructor
+  final bool showKeyboardOnLoaded; // 
+  final String? tag;
 
-  const SearchView({Key? key, this.showSearchBar = false}) : super(key: key);
+  const SearchView({
+    Key? key,
+    this.showKeyboardOnLoaded = false,
+    this.tag,
+  }) : super(key: key);
 
   @override
   SearchViewState createState() => SearchViewState();
@@ -18,7 +23,7 @@ class SearchViewState extends State<SearchView> {
   void initState() {
     super.initState();
     // Request focus on the search field when the widget loads
-    if (widget.showSearchBar) {
+    if (widget.showKeyboardOnLoaded) {
       _requestFocusOnSearchField();
     }
   }
@@ -66,25 +71,27 @@ class SearchViewState extends State<SearchView> {
                       ),
                     ),
                   ),
-                  if (widget.showSearchBar) // Conditionally show the search bar based on the boolean value
+                  if (widget
+                      .showKeyboardOnLoaded) // Conditionally show the search bar based on the boolean value
                     const SizedBox(height: 5),
-                    TextFormField(
-                      focusNode: _searchFocusNode, // Assign the FocusNode
-                      decoration: InputDecoration(
-                        hintText: 'Search books, stories, literature by title',
-                        filled: true,
-                        fillColor: Colors.white,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20),
-                          borderSide: BorderSide.none,
-                        ),
-                        prefixIcon: const Icon(
-                          LineIcons.search,
-                          color: Colors.black,
-                        ),
+                  TextFormField(
+                    focusNode: _searchFocusNode, // Assign the FocusNode
+                    decoration: InputDecoration(
+                      hintText: 'Search books, stories, literature by title',
+                      filled: true,
+                      fillColor: Colors.white,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20),
+                        borderSide: BorderSide.none,
+                      ),
+                      prefixIcon: const Icon(
+                        LineIcons.search,
+                        color: Colors.black,
                       ),
                     ),
-                  if (widget.showSearchBar) // Conditionally show the search bar based on the boolean value
+                  ),
+                  if (widget
+                      .showKeyboardOnLoaded) // Conditionally show the search bar based on the boolean value
                     const SizedBox(height: 5),
                   HorizontalChips(
                     onChipTap: (tag) {

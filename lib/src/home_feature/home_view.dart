@@ -9,7 +9,6 @@ class HomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.black87,
@@ -45,7 +44,7 @@ class HomeView extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                         builder: (context) => const SearchView(
-                          showSearchBar: true,
+                          showKeyboardOnLoaded: true,
                         ),
                       ),
                     );
@@ -69,40 +68,43 @@ class HomeView extends StatelessWidget {
                 const SizedBox(height: 5),
                 HorizontalChips(
                   onChipTap: (tag) {
-                    print("Tapped on $tag");
+                    SearchView(tag: tag);
                   },
                 ),
                 SectionWidget(
                   title: 'New Releases',
-                  onRightArrowPressed: () => {Navigator.push(
+                  onRightArrowPressed: () => {
+                    Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const SearchView(
-                        ),
+                        builder: (context) => const SearchView(),
                       ),
-                    )},
+                    )
+                  },
                 ),
                 const SizedBox(height: 20),
                 SectionWidget(
                   title: 'Short Stories',
-                  onRightArrowPressed: () => {Navigator.push(
+                  onRightArrowPressed: () => {
+                    Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const SearchView(
-                        ),
+                        builder: (context) => const SearchView(),
                       ),
-                    )},
+                    )
+                  },
                 ),
                 const SizedBox(height: 20),
                 SectionWidget(
                   title: 'Drift into Sleep',
-                  onRightArrowPressed: () => {Navigator.push(
+                  onRightArrowPressed: () => {
+                    Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const SearchView(
-                        ),
+                        builder: (context) => const SearchView(),
                       ),
-                    )},
+                    )
+                  },
                 ),
                 const SizedBox(height: 20),
               ],

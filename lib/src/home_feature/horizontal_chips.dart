@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+
 class HorizontalChips extends StatelessWidget {
   final Function(String) onChipTap;
 
