@@ -1,28 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
+import './horizontal_chips.dart'; // Import the new widget
 
 class SearchView extends StatefulWidget {
   const SearchView({Key? key}) : super(key: key);
 
   @override
-  _SearchViewState createState() => _SearchViewState();
+  SearchViewState createState() => SearchViewState();
 }
 
-class _SearchViewState extends State<SearchView> {
-  late FocusNode _searchFocusNode;
+class SearchViewState extends State<SearchView> {
+  final _searchFocusNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
-    _searchFocusNode = FocusNode();
     // Request focus on the search field when the widget loads
-    _searchFocusNode.requestFocus();
+    _requestFocusOnSearchField();
   }
 
   @override
   void dispose() {
     _searchFocusNode.dispose();
     super.dispose();
+  }
+
+  void _requestFocusOnSearchField() {
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      FocusScope.of(context).requestFocus(_searchFocusNode);
+    });
   }
 
   @override
@@ -41,7 +47,7 @@ class _SearchViewState extends State<SearchView> {
                     backgroundColor: Colors.transparent,
                     centerTitle: false,
                     leading: IconButton(
-                      icon: Icon(Icons.arrow_back),
+                      icon: const Icon(Icons.arrow_back),
                       color: Colors.white,
                       onPressed: () {
                         Navigator.pop(context);
@@ -67,32 +73,17 @@ class _SearchViewState extends State<SearchView> {
                         borderRadius: BorderRadius.circular(20),
                         borderSide: BorderSide.none,
                       ),
-                      prefixIcon: Icon(
+                      prefixIcon: const Icon(
                         LineIcons.search,
                         color: Colors.black,
                       ),
                     ),
                   ),
                   const SizedBox(height: 5),
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: tags.map((tag) {
-                        return GestureDetector(
-                          onTap: () {
-                            print("Tapped on $tag");
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.only(right: 5),
-                            child: Chip(
-                              side: BorderSide(color: Colors.white, width: 2),
-                              backgroundColor: Colors.black,
-                              label: Text(tag, style: TextStyle(color: Colors.white)),
-                            ),
-                          ),
-                        );
-                      }).toList(),
-                    ),
+                  HorizontalChips(
+                    onChipTap: (tag) {
+                      print("Tapped on $tag");
+                    },
                   ),
                 ],
               ),
@@ -103,19 +94,3 @@ class _SearchViewState extends State<SearchView> {
     );
   }
 }
-final List<String> tags = [
-  "Fiction",
-  "Short Story",
-  "Romance",
-  "Mystery",
-  "Sci-fi",
-  "Horror",
-  "Non-Fiction",
-  "Meditation",
-  "Adventure",
-  "Children",
-  "Gothic",
-  "War",
-  "Tragedy",
-  "Poetry",
-];

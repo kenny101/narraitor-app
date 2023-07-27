@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import './section_widget.dart';
 import './search_view.dart';
 import 'package:line_icons/line_icons.dart';
+import './horizontal_chips.dart'; // Import the new widget
 
 class HomeView extends StatelessWidget {
   const HomeView({Key? key}) : super(key: key);
@@ -42,7 +43,7 @@ class HomeView extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>  SearchView(),
+                        builder: (context) => const SearchView(),
                       ),
                     );
                   },
@@ -63,27 +64,10 @@ class HomeView extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 5),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: tags.map((tag) {
-                      return GestureDetector(
-                        onTap: () {
-                          print("Tapped on $tag");
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.only(right: 5),
-                          child: Chip(
-                            side:
-                                const BorderSide(color: Colors.white, width: 2),
-                            backgroundColor: Colors.black,
-                            label: Text(tag,
-                                style: const TextStyle(color: Colors.white)),
-                          ),
-                        ),
-                      );
-                    }).toList(),
-                  ),
+                HorizontalChips(
+                  onChipTap: (tag) {
+                    print("Tapped on $tag");
+                  },
                 ),
                 SectionWidget(
                   title: 'New Releases',
@@ -108,20 +92,3 @@ class HomeView extends StatelessWidget {
     );
   }
 }
-
-final List<String> tags = [
-  "Fiction",
-  "Short Story",
-  "Romance",
-  "Mystery",
-  "Sci-fi",
-  "Horror",
-  "Non-Fiction",
-  "Meditation",
-  "Adventure",
-  "Children",
-  "Gothic",
-  "War",
-  "Tragedy",
-  "Poetry",
-];
