@@ -3,7 +3,9 @@ import 'package:line_icons/line_icons.dart';
 import './horizontal_chips.dart'; // Import the new widget
 
 class SearchView extends StatefulWidget {
-  const SearchView({Key? key}) : super(key: key);
+  final bool showSearchBar; // Add the boolean parameter to the constructor
+
+  const SearchView({Key? key, this.showSearchBar = false}) : super(key: key);
 
   @override
   SearchViewState createState() => SearchViewState();
@@ -16,7 +18,9 @@ class SearchViewState extends State<SearchView> {
   void initState() {
     super.initState();
     // Request focus on the search field when the widget loads
-    _requestFocusOnSearchField();
+    if (widget.showSearchBar) {
+      _requestFocusOnSearchField();
+    }
   }
 
   @override
@@ -62,24 +66,26 @@ class SearchViewState extends State<SearchView> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 5),
-                  TextFormField(
-                    focusNode: _searchFocusNode, // Assign the FocusNode
-                    decoration: InputDecoration(
-                      hintText: 'Search books, stories, literature by title',
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20),
-                        borderSide: BorderSide.none,
-                      ),
-                      prefixIcon: const Icon(
-                        LineIcons.search,
-                        color: Colors.black,
+                  if (widget.showSearchBar) // Conditionally show the search bar based on the boolean value
+                    const SizedBox(height: 5),
+                    TextFormField(
+                      focusNode: _searchFocusNode, // Assign the FocusNode
+                      decoration: InputDecoration(
+                        hintText: 'Search books, stories, literature by title',
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20),
+                          borderSide: BorderSide.none,
+                        ),
+                        prefixIcon: const Icon(
+                          LineIcons.search,
+                          color: Colors.black,
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 5),
+                  if (widget.showSearchBar) // Conditionally show the search bar based on the boolean value
+                    const SizedBox(height: 5),
                   HorizontalChips(
                     onChipTap: (tag) {
                       print("Tapped on $tag");

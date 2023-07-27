@@ -9,6 +9,7 @@ class HomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.black87,
@@ -43,7 +44,9 @@ class HomeView extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const SearchView(),
+                        builder: (context) => const SearchView(
+                          showSearchBar: true,
+                        ),
                       ),
                     );
                   },
@@ -58,8 +61,8 @@ class HomeView extends StatelessWidget {
                     ),
                     // Add the search icon using prefixIcon
                     prefixIcon: const Icon(
-                      LineIcons.search, // Search icon from line_icons package
-                      color: Colors.black, // Icon color
+                      LineIcons.search,
+                      color: Colors.black,
                     ),
                   ),
                 ),
@@ -71,17 +74,35 @@ class HomeView extends StatelessWidget {
                 ),
                 SectionWidget(
                   title: 'New Releases',
-                  onRightArrowPressed: () => {},
+                  onRightArrowPressed: () => {Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const SearchView(
+                        ),
+                      ),
+                    )},
                 ),
                 const SizedBox(height: 20),
                 SectionWidget(
                   title: 'Short Stories',
-                  onRightArrowPressed: () => {},
+                  onRightArrowPressed: () => {Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const SearchView(
+                        ),
+                      ),
+                    )},
                 ),
                 const SizedBox(height: 20),
                 SectionWidget(
                   title: 'Drift into Sleep',
-                  onRightArrowPressed: () => {},
+                  onRightArrowPressed: () => {Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const SearchView(
+                        ),
+                      ),
+                    )},
                 ),
                 const SizedBox(height: 20),
               ],

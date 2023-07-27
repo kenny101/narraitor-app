@@ -34,7 +34,7 @@ class HorizontalChips extends StatelessWidget {
               padding: const EdgeInsets.only(right: 5),
               child: Chip(
                 side: const BorderSide(color: Colors.white, width: 2),
-                backgroundColor: Colors.black,
+                backgroundColor: Colors.grey[900]!,
                 label: Text(tag, style: const TextStyle(color: Colors.white)),
               ),
             ),

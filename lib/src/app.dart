@@ -7,6 +7,8 @@ import 'auth_feature/signup_view.dart';
 import 'providers/auth_provider.dart';
 import 'home_feature/home_view.dart';
 import 'nav_feature/navbar_view.dart';
+import 'home_feature/search_view.dart';
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -44,6 +46,11 @@ class MyApp extends StatelessWidget {
           name: 'navbar',
           path: '/navbar',
           builder: (context, state) => const Navbar(),
+        ),
+        GoRoute(
+          name: 'search',
+          path: '/search',
+          builder: (context, state) => const SearchView(showSearchBar: true),
         ),
       ],
       redirect: (context, state) => _redirectToCorrectView(context),
