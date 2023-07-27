@@ -5,8 +5,8 @@ import 'auth_feature/welcome_view.dart';
 import 'auth_feature/login_view.dart';
 import 'auth_feature/signup_view.dart';
 import 'providers/auth_provider.dart';
-import 'home_feature/home_view.dart';
 import 'nav_feature/navbar_view.dart';
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
