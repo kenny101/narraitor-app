@@ -44,7 +44,7 @@ class NavbarState extends State<Navbar> {
                   Border.all(color: Colors.grey, width: 2), // tab button border
               activeColor: Colors.white, // Set the active tab's color to white.
               iconSize: 24,
-              padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 27, vertical: 10),
               duration: const Duration(milliseconds: 400),
               tabBackgroundColor: const Color.fromARGB(40, 245, 245, 245)!,
               color: Colors.white, // Set the inactive tabs' color to white.
