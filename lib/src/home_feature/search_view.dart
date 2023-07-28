@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 import './horizontal_chips.dart'; // Import the new widget
+import '../providers/search_provider.dart';
+import 'package:provider/provider.dart';
 
 class SearchView extends StatefulWidget {
-  final bool showKeyboardOnLoaded; // 
+  final bool showKeyboardOnLoaded;
   final String? tag;
 
   const SearchView({
@@ -18,6 +20,8 @@ class SearchView extends StatefulWidget {
 
 class SearchViewState extends State<SearchView> {
   final _searchFocusNode = FocusNode();
+  final _searchController = TextEditingController();
+  bool _showClearButton = false;
 
   @override
   void initState() {
@@ -26,11 +30,15 @@ class SearchViewState extends State<SearchView> {
     if (widget.showKeyboardOnLoaded) {
       _requestFocusOnSearchField();
     }
+
+    // Listen for changes in the text field
+    _searchController.addListener(_onTextChanged);
   }
 
   @override
   void dispose() {
     _searchFocusNode.dispose();
+    _searchController.dispose();
     super.dispose();
   }
 
@@ -40,8 +48,22 @@ class SearchViewState extends State<SearchView> {
     });
   }
 
+  void _onTextChanged() {
+    setState(() {
+      _showClearButton = _searchController.text.isNotEmpty;
+    });
+  }
+
+  void _clearSearch() {
+    setState(() {
+      _searchController.clear();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    final searchProvider = Provider.of<SearchProvider>(context);
+
     return MaterialApp(
       home: SafeArea(
         child: Scaffold(
@@ -59,6 +81,7 @@ class SearchViewState extends State<SearchView> {
                       icon: const Icon(Icons.arrow_back),
                       color: Colors.white,
                       onPressed: () {
+                        searchProvider.resetTag();
                         Navigator.pop(context);
                       },
                     ),
@@ -76,6 +99,13 @@ class SearchViewState extends State<SearchView> {
                     const SizedBox(height: 5),
                   TextFormField(
                     focusNode: _searchFocusNode, // Assign the FocusNode
+                    controller:
+                        _searchController, // Use the TextEditingController
+                    textInputAction: TextInputAction.search,
+                    onFieldSubmitted: (value) {
+                      // Handle the search action here
+                      print("Search: $value");
+                    },
                     decoration: InputDecoration(
                       hintText: 'Search books, stories, literature by title',
                       filled: true,
@@ -88,6 +118,13 @@ class SearchViewState extends State<SearchView> {
                         LineIcons.search,
                         color: Colors.black,
                       ),
+                      suffixIcon: _showClearButton
+                          ? GestureDetector(
+                              onTap:
+                                  _clearSearch, // Handle the tap event to clear the search
+                              child: const Icon(LineIcons.times, color: Colors.black),
+                            )
+                          : null,
                     ),
                   ),
                   if (widget
