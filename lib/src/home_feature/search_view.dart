@@ -3,6 +3,8 @@ import 'package:line_icons/line_icons.dart';
 import './horizontal_chips.dart';
 import '../providers/search_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:pocketbase/pocketbase.dart';
+import './search_tile.dart';
 
 class SearchView extends StatefulWidget {
   final bool showKeyboardOnLoaded;
@@ -146,6 +148,28 @@ class SearchViewState extends State<SearchView> {
                   HorizontalChips(
                     onChipTap: (tag) {
                       print("Tapped on $tag");
+                    },
+                  ),
+                  FutureBuilder<List<RecordModel>>(
+                    future: searchProvider
+                        .searchContent('tags?~"${searchProvider.selectedTag}"'),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return CircularProgressIndicator();
+                      } else if (snapshot.hasData) {
+                        // Generate a list of SearchCard widgets from the snapshot data
+                        List<SearchTile> searchTiles =
+                            snapshot.data!.map((item) {
+                          return SearchTile(item: item);
+                        }).toList();
+                        return ListView(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          children: searchTiles,
+                        );
+                      } else {
+                        return Text('No data found.');
+                      }
                     },
                   ),
                 ],

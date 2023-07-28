@@ -22,14 +22,14 @@ class SectionCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           child: Image.network(
             imageUrl,
-            height: 220,
-            width: 220,
+            height: 200,
+            width: 200,
             fit: BoxFit.cover,
           ),
         ),
         Container(
-          height: 220,
-          width: 220,
+          height: 200,
+          width: 200,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
             gradient: const LinearGradient(
@@ -40,7 +40,7 @@ class SectionCard extends StatelessWidget {
           ),
         ),
         Positioned(
-          bottom: 8,
+          bottom: 10,
           left: 8,
           right: 8,
           child: Column(
@@ -64,23 +64,6 @@ class SectionCard extends StatelessWidget {
                   color: Colors.white,
                   fontSize: 12,
                 ),
-              ),
-              RatingBar.builder(
-                ignoreGestures: true,
-                itemSize: 20,
-                initialRating: 3,
-                minRating: 0,
-                direction: Axis.horizontal,
-                allowHalfRating: true,
-                itemCount: 5,
-                itemPadding: const EdgeInsets.only(right: 2),
-                itemBuilder: (context, _) => const Icon(
-                  Icons.star,
-                  color: Colors.amber,
-                ),
-                onRatingUpdate: (rating) {
-                  print(rating);
-                },
               ),
             ],
           ),

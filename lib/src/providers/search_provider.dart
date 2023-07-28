@@ -37,3 +37,8 @@ class SearchProvider extends ChangeNotifier {
     return resultList.items;
   }
 }
+
+String parseUrl(RecordModel item, String field, bool thumb) {
+  String thumbSize = thumb ? '100x100' : '';
+  return "https://narraitor.fly.dev/api/files/${item.collectionId}/${item.id}/${item.getStringValue(field)}?${thumbSize}";
+}
