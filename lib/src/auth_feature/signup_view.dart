@@ -1,9 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:narraitor/src/auth_feature/auth_button.dart';
+import 'package:narraitor/src/auth_feature/login_view.dart';
 
-class SignupView extends StatelessWidget {
-  const SignupView({super.key});
+class SignupView extends StatefulWidget {
+  const SignupView({Key? key}) : super(key: key);
+
+  @override
+  State<SignupView> createState() => _SignupViewState();
+}
+
+class _SignupViewState extends State<SignupView> {
+  bool _isPasswordVisible = false;
+  bool _isVerifyPasswordVisible = false;
+
+  void _togglePasswordVisibility() {
+    setState(() {
+      _isPasswordVisible = !_isPasswordVisible;
+    });
+  }
+
+  void _toggleVerifyPasswordVisibility() {
+    setState(() {
+      _isVerifyPasswordVisible = !_isVerifyPasswordVisible;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -12,9 +33,9 @@ class SignupView extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        centerTitle: true, // Center the title horizontally.
+        centerTitle: true,
         title: Text(
-          'Sign up with email',
+          'Sign Up',
           style: GoogleFonts.nunito(
             fontSize: 20,
             fontWeight: FontWeight.bold,
@@ -33,13 +54,81 @@ class SignupView extends StatelessWidget {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          // Set the background image using a Container with a DecorationImage
           Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
                 image: AssetImage('assets/welcome-background.png'),
                 fit: BoxFit.cover,
               ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                TextFormField(
+                  decoration: InputDecoration(
+                    hintText: 'Username',
+                    fillColor: Colors.white,
+                    filled: true,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    prefixIcon: const Icon(Icons.person), // Eye icon for username
+                  ),
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  obscureText: !_isPasswordVisible,
+                  decoration: InputDecoration(
+                    hintText: 'Password',
+                    fillColor: Colors.white,
+                    filled: true,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    prefixIcon: const Icon(Icons.lock), // Eye icon for password
+                    suffixIcon: IconButton(
+                      onPressed: _togglePasswordVisibility,
+                      icon: Icon(
+                        _isPasswordVisible
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  obscureText: !_isVerifyPasswordVisible,
+                  decoration: InputDecoration(
+                    hintText: 'Verify Password',
+                    fillColor: Colors.white,
+                    filled: true,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    prefixIcon: const Icon(Icons.lock), // Eye icon for verify password
+                    suffixIcon: IconButton(
+                      onPressed: _toggleVerifyPasswordVisibility,
+                      icon: Icon(
+                        _isVerifyPasswordVisible
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                AuthButton(
+                  text: 'Create account',
+                  onPressed: () {
+                    // Implement account creation logic here
+                  },
+                ),
+              ],
             ),
           ),
         ],
