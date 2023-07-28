@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 
 class AuthProvider extends ChangeNotifier {
   final pb = PocketBase('https://narraitor.fly.dev');
+  PocketBase get pocketBase => pb;
 
   Future<void> logout() async {
     final prefs = await SharedPreferences.getInstance();

@@ -42,8 +42,6 @@ class HorizontalChipsState extends State<HorizontalChips> {
       builder: (context, searchProvider, _) {
         _selectedTag = searchProvider.selectedTag;
 
-        print('selected ${_selectedTag}');
-
         final List<String> tagsWithSelectedFirst =
             List.of(HorizontalChips.tags);
 

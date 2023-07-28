@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/gestures.dart';
 import 'package:line_icons/line_icons.dart';
 import './horizontal_chips.dart';
 import '../providers/search_provider.dart';
@@ -45,7 +44,6 @@ class SearchViewState extends State<SearchView> {
   void dispose() {
     _searchFocusNode.dispose();
     _searchController.dispose();
-
     super.dispose();
   }
 
@@ -110,17 +108,21 @@ class SearchViewState extends State<SearchView> {
                       ),
                     ),
                   ),
-                  if (widget.showKeyboardOnLoaded)
-                    const SizedBox(height: 5),
+                  if (widget.showKeyboardOnLoaded) const SizedBox(height: 5),
                   TextFormField(
                     focusNode: _searchFocusNode,
                     controller: _searchController,
                     textInputAction: TextInputAction.search,
-                    onFieldSubmitted: (value) {
+                    onFieldSubmitted: (value) async {
                       print("Search: $value");
+                      var result = await searchProvider.searchContent(
+                          'tags?~"${searchProvider.selectedTag}"');
+                      print('result ${result}');
                     },
                     decoration: InputDecoration(
-                      hintText: 'Search books, stories, literature by title',
+                      hintText: searchProvider.selectedTag.isEmpty
+                          ? 'Search all content by title'
+                          : 'Search content title by ${searchProvider.selectedTag}',
                       filled: true,
                       fillColor: Colors.white,
                       border: OutlineInputBorder(
@@ -140,8 +142,7 @@ class SearchViewState extends State<SearchView> {
                           : null,
                     ),
                   ),
-                  if (widget.showKeyboardOnLoaded)
-                    const SizedBox(height: 5),
+                  if (widget.showKeyboardOnLoaded) const SizedBox(height: 5),
                   HorizontalChips(
                     onChipTap: (tag) {
                       print("Tapped on $tag");

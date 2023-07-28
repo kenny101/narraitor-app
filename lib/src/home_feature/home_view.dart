@@ -4,12 +4,16 @@ import './search_view.dart';
 import 'package:line_icons/line_icons.dart';
 import './horizontal_chips.dart'; // Import the new widget
 import '../providers/search_provider.dart';
+import 'package:provider/provider.dart';
+
 
 class HomeView extends StatelessWidget {
   const HomeView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final searchProvider = Provider.of<SearchProvider>(context, listen: false);
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.black87,
@@ -68,7 +72,7 @@ class HomeView extends StatelessWidget {
                 const SizedBox(height: 5),
                 HorizontalChips(
                   onChipTap: (tag) {
-                    SearchProvider().setTag(tag);
+                    searchProvider.setTag(tag);
                     Navigator.push(
                       context,
                       MaterialPageRoute(
