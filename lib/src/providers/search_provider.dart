@@ -5,13 +5,17 @@ class SearchProvider extends ChangeNotifier {
 
   void setTag(String tag) {
     selectedTag = tag;
-    print("added $tag");
+    this.printCurrentTag();
     notifyListeners();
   }
 
   void resetTag() {
     selectedTag = "";
-    print("tag reset");
+      print('resetTag ${selectedTag}');
     notifyListeners();
+  }
+
+  void printCurrentTag() {
+    print('selectedTag ${selectedTag}');
   }
 }
