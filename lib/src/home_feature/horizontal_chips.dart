@@ -38,45 +38,68 @@ class HorizontalChipsState extends State<HorizontalChips> {
 
   @override
   Widget build(BuildContext context) {
-    final searchProvider = Provider.of<SearchProvider>(context);
-    _selectedTag = searchProvider.selectedTag;
+    return Consumer<SearchProvider>(
+      builder: (context, searchProvider, _) {
+        _selectedTag = searchProvider.selectedTag;
 
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: HorizontalChips.tags.map((tag) {
-          final isSelected = _selectedTag == tag;
-          return GestureDetector(
-            onTap: () {
-              if (!widget.disableTapAnimation!) {
-                setState(() {
-                  _selectedTag =
-                      isSelected ? null : tag; // Toggle the selected tag
-                });
-              }
-              searchProvider
-                  .setTag(tag); // Set the selected tag in the SearchProvider
-              widget.onChipTap(tag);
-            },
-            child: Padding(
-              padding: const EdgeInsets.only(right: 5),
-              child: Chip(
-                side: const BorderSide(
-                  color: Colors.white,
-                  width: 2,
-                ),
-                backgroundColor: isSelected ? Colors.grey[700] : Colors.black,
-                label: Text(
-                  tag,
-                  style: const TextStyle(
-                    color: Colors.white,
+        print('selected ${_selectedTag}');
+
+        final List<String> tagsWithSelectedFirst =
+            List.of(HorizontalChips.tags);
+
+        if (_selectedTag != null &&
+            tagsWithSelectedFirst.contains(_selectedTag!)) {
+          tagsWithSelectedFirst.remove(_selectedTag!);
+          tagsWithSelectedFirst.insert(0, _selectedTag!);
+        }
+
+        return SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: tagsWithSelectedFirst.map((tag) {
+              final isSelected = _selectedTag == tag;
+              return GestureDetector(
+                onTap: () {
+                  if (!widget.disableTapAnimation!) {
+                    setState(() {
+                      if (_selectedTag == tag) {
+                        _selectedTag = null; // Unselect the tag if tapped again
+                      } else {
+                        _selectedTag = tag; // Select the tapped tag
+                      }
+                    });
+                  }
+                  if (_selectedTag == null) {
+                    searchProvider
+                        .resetTag(); // Unselect the tag in the SearchProvider
+                  } else {
+                    searchProvider.setTag(
+                        tag); // Set the selected tag in the SearchProvider
+                  }
+                  widget.onChipTap(tag);
+                },
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 5),
+                  child: Chip(
+                    side: const BorderSide(
+                      color: Colors.white,
+                      width: 2,
+                    ),
+                    backgroundColor:
+                        isSelected ? Colors.grey[700] : Colors.black,
+                    label: Text(
+                      tag,
+                      style: const TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ),
-          );
-        }).toList(),
-      ),
+              );
+            }).toList(),
+          ),
+        );
+      },
     );
   }
 }
