@@ -3,6 +3,7 @@ import './section_widget.dart';
 import './search_view.dart';
 import 'package:line_icons/line_icons.dart';
 import './horizontal_chips.dart'; // Import the new widget
+import '../providers/search_provider.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({Key? key}) : super(key: key);
@@ -58,7 +59,6 @@ class HomeView extends StatelessWidget {
                       borderRadius: BorderRadius.circular(20),
                       borderSide: BorderSide.none,
                     ),
-                    // Add the search icon using prefixIcon
                     prefixIcon: const Icon(
                       LineIcons.search,
                       color: Colors.black,
@@ -68,8 +68,15 @@ class HomeView extends StatelessWidget {
                 const SizedBox(height: 5),
                 HorizontalChips(
                   onChipTap: (tag) {
-                    SearchView(tag: tag);
+                    SearchProvider().setTag(tag);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SearchView(tag: tag),
+                      ),
+                    );
                   },
+                  disableTapAnimation: true,
                 ),
                 SectionWidget(
                   title: 'New Releases',

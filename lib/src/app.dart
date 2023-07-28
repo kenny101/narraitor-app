@@ -6,7 +6,7 @@ import 'auth_feature/login_view.dart';
 import 'auth_feature/signup_view.dart';
 import 'providers/auth_provider.dart';
 import 'nav_feature/navbar_view.dart';
-
+import 'providers/search_provider.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -14,7 +14,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [ChangeNotifierProvider(create: (context) => AuthProvider())],
+      providers: [
+        ChangeNotifierProvider(create: (context) => AuthProvider()),
+        ChangeNotifierProvider(create: (context) => SearchProvider())
+      ],
       child: MaterialApp.router(
         routerConfig: _configureRouter(context),
       ),
