@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:narraitor/src/auth_feature/auth_button.dart';
-import 'package:narraitor/src/auth_feature/login_view.dart';
+import 'package:pocketbase/pocketbase.dart';
+import 'package:go_router/go_router.dart';
 
 class SignupView extends StatefulWidget {
   const SignupView({Key? key}) : super(key: key);
@@ -24,6 +25,35 @@ class _SignupViewState extends State<SignupView> {
     setState(() {
       _isVerifyPasswordVisible = !_isVerifyPasswordVisible;
     });
+  }
+
+  void _handleAccountCreation() async {
+    String username = ''; // Get the username from the TextFormField
+    String password = ''; // Get the password from the TextFormField
+
+    try {
+      final pb = PocketBase('https://narraitor.fly.dev/_/');
+
+      // Request verification for the user's email
+      await pb.collection('users').requestVerification('test@example.com');
+
+      // After verification, create the user account
+      final userData = await pb.collection('users').authWithPassword(username, password);
+
+      // If account creation is successful, you can use userData for further operations
+      if (pb.authStore.isValid) {
+        print('Account created successfully!');
+        print(pb.authStore.token);
+        print(pb.authStore.model.id);
+
+        // Redirect to the home screen or any other page as needed.
+        // For example, you can use GoRouter to move to the home screen after successful account creation.
+        GoRouter.of(context).go('/home'); // Replace '/home' with your home screen route.
+      }
+    } catch (e) {
+      // Handle account creation errors here
+      print('Account creation failed: $e');
+    }
   }
 
   @override
@@ -124,9 +154,7 @@ class _SignupViewState extends State<SignupView> {
                 const SizedBox(height: 16),
                 AuthButton(
                   text: 'Create account',
-                  onPressed: () {
-                    // Implement account creation logic here
-                  },
+                  onPressed: _handleAccountCreation, // Call the handleAccountCreation function on button press
                 ),
               ],
             ),
