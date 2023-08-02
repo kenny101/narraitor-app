@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:narraitor/src/auth_feature/auth_button.dart';
-import 'package:narraitor/src/auth_feature/login_view.dart';
+import 'package:pocketbase/pocketbase.dart';
+import 'package:go_router/go_router.dart';
 
 class SignupView extends StatefulWidget {
   const SignupView({Key? key}) : super(key: key);
@@ -13,21 +14,51 @@ class SignupView extends StatefulWidget {
 class _SignupViewState extends State<SignupView> {
   bool _isPasswordVisible = false;
   bool _isVerifyPasswordVisible = false;
+  String _email = '';
+  String _password = '';
+  String _verifyPassword = '';
 
-  void _togglePasswordVisibility() {
-    setState(() {
-      _isPasswordVisible = !_isPasswordVisible;
-    });
-  }
+  Future<bool> _handleAccountCreation() async {
+    try {
+      final pb = PocketBase('https://narraitor.fly.dev');
+      print("$_email, $_password, $_verifyPassword");
+      final body = <String, dynamic>{
+        "email": _email,
+        "emailVisibility": true,
+        "password": _password,
+        "passwordConfirm": _verifyPassword,
+      };
 
-  void _toggleVerifyPasswordVisibility() {
-    setState(() {
-      _isVerifyPasswordVisible = !_isVerifyPasswordVisible;
-    });
+      final record = await pb.collection('users').create(body: body);
+      await pb.collection('users').requestVerification(_email);
+      // TODO:request verification dialog after request verfication method
+
+      // After verification, create the user account
+      final authData = await pb.collection('users').authWithPassword(
+            _email,
+            _password,
+          );
+
+      // If account creation is successful, you can use userData for further operations
+      if (pb.authStore.isValid) {
+        print('Account created successfully!');
+        return true;
+      } else {
+        // show whatever error dialog
+        print("error creating account");
+        return false;
+      }
+    } catch (e) {
+      // Handle account creation errors here
+      print('Account creation failed: $e');
+      return false;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final goRouter = GoRouter.of(context);
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -70,14 +101,22 @@ class _SignupViewState extends State<SignupView> {
               children: [
                 TextFormField(
                   decoration: InputDecoration(
-                    hintText: 'Username',
+                    hintText: 'Email',
                     fillColor: Colors.white,
                     filled: true,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8.0),
                     ),
-                    prefixIcon: const Icon(Icons.person), // Eye icon for username
+                    prefixIcon:
+                        const Icon(Icons.person), // Eye icon for username
                   ),
+                  onChanged: (email) {
+                    print('newValue in email change $email');
+
+                    setState(() {
+                      _email = email;
+                    });
+                  },
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
@@ -91,7 +130,9 @@ class _SignupViewState extends State<SignupView> {
                     ),
                     prefixIcon: const Icon(Icons.lock), // Eye icon for password
                     suffixIcon: IconButton(
-                      onPressed: _togglePasswordVisibility,
+                      onPressed: () {
+                        _isPasswordVisible = !_isPasswordVisible;
+                      },
                       icon: Icon(
                         _isPasswordVisible
                             ? Icons.visibility
@@ -99,6 +140,13 @@ class _SignupViewState extends State<SignupView> {
                       ),
                     ),
                   ),
+                  onChanged: (password) {
+                    print('newValue in password $password');
+
+                    setState(() {
+                      _password = password;
+                    });
+                  },
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
@@ -110,9 +158,14 @@ class _SignupViewState extends State<SignupView> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8.0),
                     ),
-                    prefixIcon: const Icon(Icons.lock), // Eye icon for verify password
+                    prefixIcon:
+                        const Icon(Icons.lock), // Eye icon for verify password
                     suffixIcon: IconButton(
-                      onPressed: _toggleVerifyPasswordVisibility,
+                      onPressed: () {
+                        setState(() {
+                          _isVerifyPasswordVisible = !_isVerifyPasswordVisible;
+                        });
+                      },
                       icon: Icon(
                         _isVerifyPasswordVisible
                             ? Icons.visibility
@@ -120,12 +173,23 @@ class _SignupViewState extends State<SignupView> {
                       ),
                     ),
                   ),
+                  onChanged: (verifyPassword) {
+                    print('verifyPassword $verifyPassword');
+
+                    setState(() {
+                      _verifyPassword = verifyPassword;
+                    });
+                  },
                 ),
                 const SizedBox(height: 16),
                 AuthButton(
                   text: 'Create account',
-                  onPressed: () {
-                    // Implement account creation logic here
+                  onPressed: () async {
+                    bool successfulAccountCreation =
+                        await _handleAccountCreation(); // Call the _handleAccountCreation function
+                    if (successfulAccountCreation) {
+                      goRouter.goNamed('navbar');
+                    }
                   },
                 ),
               ],

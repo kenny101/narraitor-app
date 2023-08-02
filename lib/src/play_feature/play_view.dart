@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import '../providers/auth_provider.dart';
-import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 
 class PlayView extends StatelessWidget {

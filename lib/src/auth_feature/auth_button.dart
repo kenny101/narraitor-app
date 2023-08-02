@@ -5,11 +5,13 @@ class AuthButton extends StatefulWidget {
   final String? imageAssetPath;
   final String text;
   final VoidCallback onPressed;
+  final VoidCallback? onAccountCreatePressed; // Add this line
 
   const AuthButton({
     this.imageAssetPath,
     required this.text,
     required this.onPressed,
+    this.onAccountCreatePressed, // Add this line
     Key? key,
   }) : super(key: key);
 
@@ -46,7 +48,14 @@ class _AuthButtonState extends State<AuthButton>
         end: .98,
       ).animate(_controller),
       child: ElevatedButton(
-        onPressed: _onButtonPressed,
+        onPressed: widget.onAccountCreatePressed != null // Modify this line
+            ? () {
+                _onButtonPressed();
+                if (widget.onAccountCreatePressed != null) {
+                  widget.onAccountCreatePressed!(); // Add this line
+                }
+              }
+            : _onButtonPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.white.withOpacity(.2),
           elevation: 1,

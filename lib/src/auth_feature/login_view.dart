@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:narraitor/src/auth_feature/auth_button.dart';
+import 'package:pocketbase/pocketbase.dart';
+import 'package:go_router/go_router.dart'; // Added this import for routing
 
 class LoginView extends StatefulWidget {
   const LoginView({Key? key}) : super(key: key);
@@ -16,6 +18,33 @@ class _LoginViewState extends State<LoginView> {
     setState(() {
       _isPasswordVisible = !_isPasswordVisible;
     });
+  }
+
+  void _handleLogin() async {
+    String username = ''; // Get the username from the TextFormField
+    String password = ''; // Get the password from the TextFormField
+
+    try {
+      final pb = PocketBase('https://narraitor.fly.dev');
+      final authData =
+          await pb.collection('users').authWithPassword(username, password);
+
+      // If login is successful, you can use authData for further operations
+      if (pb.authStore.isValid) {
+        print('Login successful!');
+        print(pb.authStore.token);
+        print(pb.authStore.model.id);
+
+        // Redirect to the navbar screen using GoRouter
+        GoRouter.of(context)
+            .go('/navbar'); // Replace with your home screen route.
+      } else {
+        print('Invalid username or password.');
+      }
+    } catch (e) {
+      // Handle login errors here
+      print('Login failed: $e');
+    }
   }
 
   @override
@@ -62,13 +91,14 @@ class _LoginViewState extends State<LoginView> {
                 children: [
                   TextFormField(
                     decoration: InputDecoration(
-                      hintText: 'Username',
+                      hintText: 'Email or Username',
                       filled: true,
                       fillColor: Colors.white,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10.0),
                       ),
-                      prefixIcon: const Icon(Icons.person), // Eye icon for username
+                      prefixIcon:
+                          const Icon(Icons.person), // Eye icon for username
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -81,7 +111,8 @@ class _LoginViewState extends State<LoginView> {
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10.0),
                       ),
-                      prefixIcon: const Icon(Icons.lock), // Eye icon for password
+                      prefixIcon:
+                          const Icon(Icons.lock), // Eye icon for password
                       suffixIcon: IconButton(
                         onPressed: _togglePasswordVisibility,
                         icon: Icon(
@@ -105,11 +136,11 @@ class _LoginViewState extends State<LoginView> {
                   const SizedBox(height: 20),
                   AuthButton(
                     text: 'Login',
-                    onPressed: () {
-                      // Add your login logic here
-                    },
+                    onPressed:
+                        _handleLogin, // Call the handleLogin function on button press
                   ),
-                  const SizedBox(height: 20), // Add more spacing between buttons
+                  const SizedBox(
+                      height: 20), // Add more spacing between buttons
                   TextButton(
                     onPressed: () {
                       // Add your "Create Account" logic here
