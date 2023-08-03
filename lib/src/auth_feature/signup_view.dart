@@ -17,11 +17,28 @@ class _SignupViewState extends State<SignupView> {
   String _email = '';
   String _password = '';
   String _verifyPassword = '';
+  bool _showPasswordCriteria = false;
+  final FocusNode _passwordFocusNode = FocusNode();
+  String _errorMessage = '';
+
+  void _showPasswordCriteriaPopup(bool isVisible) {
+    setState(() {
+      _showPasswordCriteria = isVisible;
+    });
+  }
 
   Future<bool> _handleAccountCreation() async {
     try {
       final pb = PocketBase('https://narraitor.fly.dev');
       print("$_email, $_password, $_verifyPassword");
+
+      if (_password.length < 8) {
+        setState(() {
+          _errorMessage = 'Password must be at least 8 characters long.';
+        });
+        return false;
+      }
+
       final body = <String, dynamic>{
         "email": _email,
         "emailVisibility": true,
@@ -31,26 +48,26 @@ class _SignupViewState extends State<SignupView> {
 
       final record = await pb.collection('users').create(body: body);
       await pb.collection('users').requestVerification(_email);
-      // TODO:request verification dialog after request verfication method
 
-      // After verification, create the user account
       final authData = await pb.collection('users').authWithPassword(
-            _email,
-            _password,
-          );
+        _email,
+        _password,
+      );
 
-      // If account creation is successful, you can use userData for further operations
       if (pb.authStore.isValid) {
         print('Account created successfully!');
         return true;
       } else {
-        // show whatever error dialog
-        print("error creating account");
+        setState(() {
+          _errorMessage = 'Error creating account.';
+        });
         return false;
       }
     } catch (e) {
-      // Handle account creation errors here
       print('Account creation failed: $e');
+      setState(() {
+        _errorMessage = 'Account creation failed: $e';
+      });
       return false;
     }
   }
@@ -107,8 +124,7 @@ class _SignupViewState extends State<SignupView> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8.0),
                     ),
-                    prefixIcon:
-                        const Icon(Icons.person), // Eye icon for username
+                    prefixIcon: const Icon(Icons.person),
                   ),
                   onChanged: (email) {
                     print('newValue in email change $email');
@@ -121,6 +137,7 @@ class _SignupViewState extends State<SignupView> {
                 const SizedBox(height: 16),
                 TextFormField(
                   obscureText: !_isPasswordVisible,
+                  focusNode: _passwordFocusNode,
                   decoration: InputDecoration(
                     hintText: 'Password',
                     fillColor: Colors.white,
@@ -128,12 +145,15 @@ class _SignupViewState extends State<SignupView> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8.0),
                     ),
-                    prefixIcon: const Icon(Icons.lock), // Eye icon for password
-                    suffixIcon: IconButton(
-                      onPressed: () {
-                        _isPasswordVisible = !_isPasswordVisible;
+                    prefixIcon: const Icon(Icons.lock),
+                    suffixIcon: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _isPasswordVisible = !_isPasswordVisible;
+                        });
+                        _showPasswordCriteriaPopup(!_isPasswordVisible);
                       },
-                      icon: Icon(
+                      child: Icon(
                         _isPasswordVisible
                             ? Icons.visibility
                             : Icons.visibility_off,
@@ -158,12 +178,12 @@ class _SignupViewState extends State<SignupView> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8.0),
                     ),
-                    prefixIcon:
-                        const Icon(Icons.lock), // Eye icon for verify password
+                    prefixIcon: const Icon(Icons.lock),
                     suffixIcon: IconButton(
                       onPressed: () {
                         setState(() {
-                          _isVerifyPasswordVisible = !_isVerifyPasswordVisible;
+                          _isVerifyPasswordVisible =
+                              !_isVerifyPasswordVisible;
                         });
                       },
                       icon: Icon(
@@ -182,11 +202,24 @@ class _SignupViewState extends State<SignupView> {
                   },
                 ),
                 const SizedBox(height: 16),
+                // Show error message if present
+                if (_errorMessage.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      _errorMessage,
+                      style: const TextStyle(color: Colors.red),
+                    ),
+                  ),
                 AuthButton(
                   text: 'Create account',
                   onPressed: () async {
+                    // Reset error message before account creation attempt
+                    setState(() {
+                      _errorMessage = '';
+                    });
                     bool successfulAccountCreation =
-                        await _handleAccountCreation(); // Call the _handleAccountCreation function
+                        await _handleAccountCreation();
                     if (successfulAccountCreation) {
                       goRouter.goNamed('navbar');
                     }
@@ -195,6 +228,21 @@ class _SignupViewState extends State<SignupView> {
               ],
             ),
           ),
+          if (_showPasswordCriteria)
+            Container(
+              alignment: Alignment.centerRight,
+              margin: const EdgeInsets.only(right: 16),
+              child: const Card(
+                color: Colors.black,
+                child: Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text(
+                    '- Password must be at least 8 characters in length',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ),
+            ),
         ],
       ),
     );
