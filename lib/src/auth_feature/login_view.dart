@@ -1,90 +1,49 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pocketbase/pocketbase.dart';
+import 'package:go_router/go_router.dart';
+import 'package:narraitor/src/auth_feature/auth_button.dart'; // Import AuthButton
 
-class AuthButton extends StatefulWidget {
-  final String? imageAssetPath;
-  final String text;
-  final VoidCallback onPressed;
-
-  const AuthButton({
-    this.imageAssetPath,
-    required this.text,
-    required this.onPressed,
-    Key? key,
-  }) : super(key: key);
+class LoginView extends StatefulWidget {
+  const LoginView({Key? key}) : super(key: key);
 
   @override
-  State<AuthButton> createState() => _AuthButtonState();
+  State<LoginView> createState() => _LoginViewState();
 }
 
-class _AuthButtonState extends State<AuthButton>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
+class _LoginViewState extends State<LoginView> {
+  bool _isPasswordVisible = false;
+  String _emailOrUsername = '';
+  String _password = '';
 
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      duration: const Duration(milliseconds: 150),
-      vsync: this,
-    );
-  }
-
-  void _onButtonPressed() {
-    _controller.forward();
-    Future.delayed(const Duration(milliseconds: 200), () {
-      _controller.reverse();
+  void _togglePasswordVisibility() {
+    setState(() {
+      _isPasswordVisible = !_isPasswordVisible;
     });
-    widget.onPressed();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return ScaleTransition(
-      scale: Tween<double>(
-        begin: 1.0,
-        end: .98,
-      ).animate(_controller),
-      child: ElevatedButton(
-        onPressed: _onButtonPressed,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.white.withOpacity(.2),
-          elevation: 1,
-          side: const BorderSide(width: 2, color: Colors.white60),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30.0),
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              if (widget.imageAssetPath != null)
-                Image.asset(
-                  widget.imageAssetPath!,
-                  width: 24,
-                  height: 24,
-                ),
-              if (widget.imageAssetPath != null) const SizedBox(width: 10),
-              Text(
-                widget.text,
-                style: GoogleFonts.nunito(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
+  void _handleLogin() async {
+    try {
+      final pb = PocketBase('https://narraitor.fly.dev');
+      final authData =
+          await pb.collection('users').authWithPassword(_emailOrUsername, _password);
 
-class LoginView extends StatelessWidget {
-  const LoginView({super.key});
+      // If login is successful, you can use authData for further operations
+      if (pb.authStore.isValid) {
+        print('Login successful!');
+        print(pb.authStore.token);
+        print(pb.authStore.model.id);
+
+        // Redirect to the navbar screen using GoRouter
+        GoRouter.of(context).go('/navbar'); // Replace '/navbar' with your home screen route.
+      } else {
+        print('Invalid email or password.');
+      }
+    } catch (e) {
+      // Handle login errors here
+      print('Login failed: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +54,7 @@ class LoginView extends StatelessWidget {
         elevation: 0,
         centerTitle: true,
         title: Text(
-          'Sign in',
+          'Login',
           style: GoogleFonts.nunito(
             fontSize: 20,
             fontWeight: FontWeight.bold,
@@ -128,19 +87,25 @@ class LoginView extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  TextField(
+                  TextFormField(
                     decoration: InputDecoration(
-                      hintText: 'Username',
+                      hintText: 'Email',
                       filled: true,
                       fillColor: Colors.white,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10.0),
                       ),
+                      prefixIcon: const Icon(Icons.person),
                     ),
+                    onChanged: (emailOrUsername) {
+                      setState(() {
+                        _emailOrUsername = emailOrUsername;
+                      });
+                    },
                   ),
                   const SizedBox(height: 20),
-                  TextField(
-                    obscureText: true,
+                  TextFormField(
+                    obscureText: !_isPasswordVisible,
                     decoration: InputDecoration(
                       hintText: 'Password',
                       filled: true,
@@ -148,7 +113,21 @@ class LoginView extends StatelessWidget {
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10.0),
                       ),
+                      prefixIcon: const Icon(Icons.lock),
+                      suffixIcon: IconButton(
+                        onPressed: _togglePasswordVisibility,
+                        icon: Icon(
+                          _isPasswordVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                        ),
+                      ),
                     ),
+                    onChanged: (password) {
+                      setState(() {
+                        _password = password;
+                      });
+                    },
                   ),
                   const SizedBox(height: 10),
                   TextButton(
@@ -164,16 +143,17 @@ class LoginView extends StatelessWidget {
                   AuthButton(
                     text: 'Login',
                     onPressed: () {
-                      // Add your login logic here
+                      _handleLogin(); // Call the handleLogin function on button press
                     },
                   ),
-                  const SizedBox(height: 20), // Add more spacing between buttons
+                  const SizedBox(
+                      height: 20), // Add more spacing between buttons
                   TextButton(
                     onPressed: () {
                       // Add your "Create Account" logic here
                     },
                     child: const Text(
-                      'New User? Create Account',
+                      "Don't have an account? Sign Up",
                       style: TextStyle(color: Colors.white),
                     ),
                   ),

@@ -35,7 +35,7 @@ class SearchViewState extends State<SearchView> {
   }
 
   void _requestFocusOnSearchField() {
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       FocusScope.of(context).requestFocus(_searchFocusNode);
     });
   }

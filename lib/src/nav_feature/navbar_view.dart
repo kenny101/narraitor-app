@@ -46,7 +46,7 @@ class NavbarState extends State<Navbar> {
               iconSize: 24,
               padding: const EdgeInsets.symmetric(horizontal: 27, vertical: 10),
               duration: const Duration(milliseconds: 400),
-              tabBackgroundColor: const Color.fromARGB(40, 245, 245, 245)!,
+              tabBackgroundColor: const Color.fromARGB(40, 245, 245, 245),
               color: Colors.white, // Set the inactive tabs' color to white.
               tabs: const [
                 GButton(
