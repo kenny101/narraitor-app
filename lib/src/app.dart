@@ -6,15 +6,22 @@ import 'auth_feature/login_view.dart';
 import 'auth_feature/signup_view.dart';
 import 'providers/auth_provider.dart';
 import 'nav_feature/navbar_view.dart';
-
+import 'providers/search_provider.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = AuthProvider();
+    final searchProvider = SearchProvider(authProvider.pocketBase);
+
     return MultiProvider(
-      providers: [ChangeNotifierProvider(create: (context) => AuthProvider())],
+      providers: [
+        ChangeNotifierProvider.value(value: authProvider),
+        ChangeNotifierProvider.value(value: searchProvider),
+        // Add more providers if needed
+      ],
       child: MaterialApp.router(
         routerConfig: _configureRouter(context),
       ),

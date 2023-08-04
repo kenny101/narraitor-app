@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
-import './horizontal_chips.dart'; // Import the new widget
+import './horizontal_chips.dart';
+import '../providers/search_provider.dart';
+import 'package:provider/provider.dart';
 
 class SearchView extends StatefulWidget {
-  final bool showKeyboardOnLoaded; // 
+  final bool showKeyboardOnLoaded;
   final String? tag;
 
   const SearchView({
@@ -18,6 +20,8 @@ class SearchView extends StatefulWidget {
 
 class SearchViewState extends State<SearchView> {
   final _searchFocusNode = FocusNode();
+  final _searchController = TextEditingController();
+  bool _showClearButton = false;
 
   @override
   void initState() {
@@ -26,11 +30,20 @@ class SearchViewState extends State<SearchView> {
     if (widget.showKeyboardOnLoaded) {
       _requestFocusOnSearchField();
     }
+
+    // Listen for changes in the text field
+    _searchController.addListener(_onTextChanged);
+
+    // Add the scoped will pop callback to handle back gesture detection
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      ModalRoute.of(context)?.addScopedWillPopCallback(_handleBackGesture);
+    });
   }
 
   @override
   void dispose() {
     _searchFocusNode.dispose();
+    _searchController.dispose();
     super.dispose();
   }
 
@@ -40,8 +53,31 @@ class SearchViewState extends State<SearchView> {
     });
   }
 
+  void _onTextChanged() {
+    setState(() {
+      _showClearButton = _searchController.text.isNotEmpty;
+    });
+  }
+
+  void _clearSearch() {
+    setState(() {
+      _searchController.clear();
+    });
+  }
+
+  Future<bool> _handleBackGesture() async {
+    // Perform your desired action when the back gesture is detected
+    final searchProvider = Provider.of<SearchProvider>(context, listen: false);
+    searchProvider.resetTag();
+
+    // Allow the back navigation to proceed
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final searchProvider = Provider.of<SearchProvider>(context);
+
     return MaterialApp(
       home: SafeArea(
         child: Scaffold(
@@ -59,6 +95,7 @@ class SearchViewState extends State<SearchView> {
                       icon: const Icon(Icons.arrow_back),
                       color: Colors.white,
                       onPressed: () {
+                        searchProvider.resetTag();
                         Navigator.pop(context);
                       },
                     ),
@@ -71,13 +108,21 @@ class SearchViewState extends State<SearchView> {
                       ),
                     ),
                   ),
-                  if (widget
-                      .showKeyboardOnLoaded) // Conditionally show the search bar based on the boolean value
-                    const SizedBox(height: 5),
+                  if (widget.showKeyboardOnLoaded) const SizedBox(height: 5),
                   TextFormField(
-                    focusNode: _searchFocusNode, // Assign the FocusNode
+                    focusNode: _searchFocusNode,
+                    controller: _searchController,
+                    textInputAction: TextInputAction.search,
+                    onFieldSubmitted: (value) async {
+                      print("Search: $value");
+                      var result = await searchProvider.searchContent(
+                          'tags?~"${searchProvider.selectedTag}"');
+                      print('result ${result}');
+                    },
                     decoration: InputDecoration(
-                      hintText: 'Search books, stories, literature by title',
+                      hintText: searchProvider.selectedTag.isEmpty
+                          ? 'Search all content by title'
+                          : 'Search content title by ${searchProvider.selectedTag}',
                       filled: true,
                       fillColor: Colors.white,
                       border: OutlineInputBorder(
@@ -88,11 +133,16 @@ class SearchViewState extends State<SearchView> {
                         LineIcons.search,
                         color: Colors.black,
                       ),
+                      suffixIcon: _showClearButton
+                          ? GestureDetector(
+                              onTap: _clearSearch,
+                              child: const Icon(LineIcons.times,
+                                  color: Colors.black),
+                            )
+                          : null,
                     ),
                   ),
-                  if (widget
-                      .showKeyboardOnLoaded) // Conditionally show the search bar based on the boolean value
-                    const SizedBox(height: 5),
+                  if (widget.showKeyboardOnLoaded) const SizedBox(height: 5),
                   HorizontalChips(
                     onChipTap: (tag) {
                       print("Tapped on $tag");
