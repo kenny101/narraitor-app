@@ -39,6 +39,20 @@ class _SignupViewState extends State<SignupView> {
         return false;
       }
 
+      if (_password.length > 14) {
+        setState(() {
+          _errorMessage = 'Password cannot be more than 14 characters long.';
+        });
+        return false;
+      }
+
+      if (_password != _verifyPassword) {
+        setState(() {
+          _errorMessage = 'Passwords do not match.';
+        });
+        return false;
+      }
+
       final body = <String, dynamic>{
         "email": _email,
         "emailVisibility": true,

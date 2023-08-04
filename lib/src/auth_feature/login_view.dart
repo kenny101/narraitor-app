@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:narraitor/src/auth_feature/auth_button.dart';
 import 'package:pocketbase/pocketbase.dart';
-import 'package:go_router/go_router.dart'; // Added this import for routing
+import 'package:go_router/go_router.dart';
+import 'package:narraitor/src/auth_feature/auth_button.dart'; // Import AuthButton
 
 class LoginView extends StatefulWidget {
   const LoginView({Key? key}) : super(key: key);
@@ -13,6 +13,8 @@ class LoginView extends StatefulWidget {
 
 class _LoginViewState extends State<LoginView> {
   bool _isPasswordVisible = false;
+  String _emailOrUsername = '';
+  String _password = '';
 
   void _togglePasswordVisibility() {
     setState(() {
@@ -21,13 +23,10 @@ class _LoginViewState extends State<LoginView> {
   }
 
   void _handleLogin() async {
-    String username = ''; // Get the username from the TextFormField
-    String password = ''; // Get the password from the TextFormField
-
     try {
       final pb = PocketBase('https://narraitor.fly.dev');
       final authData =
-          await pb.collection('users').authWithPassword(username, password);
+          await pb.collection('users').authWithPassword(_emailOrUsername, _password);
 
       // If login is successful, you can use authData for further operations
       if (pb.authStore.isValid) {
@@ -36,10 +35,9 @@ class _LoginViewState extends State<LoginView> {
         print(pb.authStore.model.id);
 
         // Redirect to the navbar screen using GoRouter
-        GoRouter.of(context)
-            .go('/navbar'); // Replace with your home screen route.
+        GoRouter.of(context).go('/navbar'); // Replace '/navbar' with your home screen route.
       } else {
-        print('Invalid username or password.');
+        print('Invalid email or password.');
       }
     } catch (e) {
       // Handle login errors here
@@ -91,15 +89,19 @@ class _LoginViewState extends State<LoginView> {
                 children: [
                   TextFormField(
                     decoration: InputDecoration(
-                      hintText: 'Email or Username',
+                      hintText: 'Email',
                       filled: true,
                       fillColor: Colors.white,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10.0),
                       ),
-                      prefixIcon:
-                          const Icon(Icons.person), // Eye icon for username
+                      prefixIcon: const Icon(Icons.person),
                     ),
+                    onChanged: (emailOrUsername) {
+                      setState(() {
+                        _emailOrUsername = emailOrUsername;
+                      });
+                    },
                   ),
                   const SizedBox(height: 20),
                   TextFormField(
@@ -111,8 +113,7 @@ class _LoginViewState extends State<LoginView> {
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10.0),
                       ),
-                      prefixIcon:
-                          const Icon(Icons.lock), // Eye icon for password
+                      prefixIcon: const Icon(Icons.lock),
                       suffixIcon: IconButton(
                         onPressed: _togglePasswordVisibility,
                         icon: Icon(
@@ -122,6 +123,11 @@ class _LoginViewState extends State<LoginView> {
                         ),
                       ),
                     ),
+                    onChanged: (password) {
+                      setState(() {
+                        _password = password;
+                      });
+                    },
                   ),
                   const SizedBox(height: 10),
                   TextButton(
@@ -136,8 +142,9 @@ class _LoginViewState extends State<LoginView> {
                   const SizedBox(height: 20),
                   AuthButton(
                     text: 'Login',
-                    onPressed:
-                        _handleLogin, // Call the handleLogin function on button press
+                    onPressed: () {
+                      _handleLogin(); // Call the handleLogin function on button press
+                    },
                   ),
                   const SizedBox(
                       height: 20), // Add more spacing between buttons
